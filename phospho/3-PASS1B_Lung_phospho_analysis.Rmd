@@ -1,0 +1,150 @@
+---
+title: "Pass 1B Lung Phospho analysis for MoTrPAC."
+author: "Michael Nestor"
+---
+
+
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+# knitr::opts_chunk$set(echo=T, message=F, warning=F, fig.align='center', out.width='10cm')
+```
+
+# Loading crosstab
+
+``` {r expression_sets}
+library(Biobase)
+library(readxl)
+library(dplyr)
+library(BiocParallel)
+library(MSnbase)
+library(vp.misc)
+ratio_results <-  read.table("MoTrPAC_PASS1B_Lung_Phospho_results_ratio.txt",
+                             header=T)
+rownames(ratio_results) <- ratio_results$ptm_id
+ratio_results <- ratio_results %>%
+  dplyr::select(-ptm_id, -protein_id, -gene_symbol, -entrez_id, -confident_score, -confident_site)
+colnames(ratio_results) <- sub("X", "", colnames(ratio_results))
+
+m <- MSnSet(as.matrix(ratio_results))
+```
+
+# Attaching metadata
+
+```{r}
+phenoData <- read_excel("./../PASS1B_T66_lung_metadata.xlsx")
+
+phenoData$plex <- as.factor(phenoData$plex)
+phenoData$vialLabel <- as.factor(phenoData$vialLabel)
+phenoData$training <- factor(phenoData$training, levels=c("control","1wk","2wk","4wk","8wk"))
+
+phenoData <- as.data.frame(phenoData)
+rownames(phenoData) <- paste0(phenoData$vialLabel)
+
+phenoData <- phenoData[sampleNames(m),]
+pData(m) <- phenoData
+validObject(m)
+```
+
+# Normalization
+
+(Partial) global normalization coefficients are used.
+
+```{r normalize}
+global_ratio_results <- read.table("./../global/MoTrPAC_PASS1B_Lung_Global_results_ratio.txt", header=T)
+
+rownames(global_ratio_results) <- global_ratio_results$protein_id
+global_ratio_results <- global_ratio_results %>%
+  dplyr::select(-protein_id, -gene_symbol, -entrez_id)
+colnames(global_ratio_results) <- sub("X", "", colnames(global_ratio_results))
+exprs_global <- as.matrix(global_ratio_results)
+
+global_norm_coefficients <- apply(exprs_global, 2, median, na.rm=T)
+exprs(m) <- sweep(exprs(m), 2, global_norm_coefficients, "-")
+```
+
+```{r saving}
+saveRDS(m, "msnset.Rds")
+```
+
+# Batch correction
+
+This section explores batch effect using PCA.
+
+```{r pca_plot1}
+library(ggplot2)
+library(ggpubr)
+library(vp.misc)
+plot_pca_v3(m, label="channel", phenotype="plex") +
+  ggtitle("PCA of PASS 1B Lung (phospho), grouped by plex")
+```
+
+There appears to be moderate batch effect. Let's remove it using `vp.misc::remove_batch_effect`.
+
+```{r remove_batch_effect}
+m <- vp.misc::remove_batch_effect(m, "plex")
+```
+
+Now check the PCA again:
+
+```{r pca_plot2}
+plot_pca_v3(m, label="channel", phenotype="plex") +
+  ggtitle("PCA of PASS 1B Lung (phospho), grouped by plex after batch correction")
+```
+
+Looks good!
+
+# Sex and training time
+
+First let's take a look at PCA by sex.
+
+```{r pca_plot3}
+plot_pca_v3(m, label="channel", phenotype="sex") +
+  ggtitle("PCA of PASS 1B Lung (phospho), grouped by sex")
+```
+
+It appears significant. Lets look at differences in training time next.
+
+```{r pca_plot4}
+plot_pca_v3(m, label="channel", phenotype="training") +
+  ggtitle("PCA of PASS 1B Lung (phospho), grouped by training")
+```
+
+It looks like the sex effect is dominating, so let's correct for sex first before making the PCA plot.
+
+```{r pca_plot5}
+m_sex_corrected <- vp.misc::remove_batch_effect(m, "sex")
+plot_pca_v3(m_sex_corrected, label="channel", phenotype="training") +
+  ggtitle("PCA of PASS 1B Lung (phospho), grouped by training and corrected for sex")
+```
+
+It is not really clear how big the effect of training is. Limma testing should provide a more analytical approach.
+
+## Limma testing
+
+```{r compute_limma}
+limma <- vp.misc::limma_gen(m, "~sex + training", "sex")
+
+ggplot(data=limma, aes(x=P.Value)) + geom_histogram(aes(y = ..density..)) +
+  xlab("Unadjusted p-value") +
+  ggtitle("Pass 1B Lung (phospho) p-value histogram for sex")
+```
+
+```{r top_significant_phosphosites}
+limma %>%
+  arrange(adj.P.Val) %>%
+  dplyr::select(logFC, adj.P.Val) %>%
+  head(20)
+```
+
+```{r compute_limma2}
+limma <- vp.misc::limma_gen(m, "~sex + training", "training")
+
+ggplot(data=limma, aes(x=P.Value)) + geom_histogram(aes(y = ..density..)) +
+  xlab("Unadjusted p-value") +
+  ggtitle("Pass 1B Lung (phospho) p-value histogram for training")
+```
+
+```{r cleanup, echo=FALSE}
+unlink(".Rcache", recursive=TRUE)
+```
