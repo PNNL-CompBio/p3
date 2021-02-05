@@ -7,7 +7,7 @@ This project provides the basic analysis and tools for carrying out end-to-end p
 Check out the [CONTRIBUTING.md](./CONTRIBUTING.md) document. We welcome all additional tool and methods. Then you can create a pull request and merge your code in.
 
 ### To use this pipeline
-Fork this repository into your own repository. You can rename it, make it private, and do what you need for your project. Then you can share the repository with others to serve as a code base for project development. The fork button is at the top: ![fork](./img/fork.jpg).
+Click on the `Use this template` button above. This will allow you to create your own repository. 
 
 ## Pipeline overview
 This pipeline links together a series of data and code repositories to ensure that any data is saved for future use. Furthermore we hope to be able to reproduce the analysis for future projects. A brief overview of each tool is described here.
