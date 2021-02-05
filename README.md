@@ -3,10 +3,10 @@ This project provides the basic analysis and tools for carrying out end-to-end p
 
 ## Overview
 
-#### To contribute to this pipeline
+### To contribute to this pipeline
 Check out the [CONTRIBUTING.md](./CONTRIBUTING.md) document. We welcome all additional tool and methods. Then you can create a pull request and merge your code in.
 
-#### To use this pipeline
+### To use this pipeline
 Fork this repository into your own repository. You can rename it, make it private, and do what you need for your project. Then you can share the repository with others to serve as a code base for project development. The fork button is at the top: ![fork](./img/fork.jpg).
 
 ## Pipeline overview
@@ -25,7 +25,7 @@ Synapse is used for:
 - data processing: UUIDs and permission modifications allow for easy analysis
 - data release: data can be moved to the PDC or shared
 
+You will need to acquire a [synapse username](http://synapse.org/register) to access synapse, and become a [certified user]() to add data, but after that you will be set with future projects. 
+
 ### Functional analysis
-
-
-## Getting started
+There are typically a few steps we do for functional analysis. They are described in the [functional analysis](./functional) directory for now. 
