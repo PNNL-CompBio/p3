@@ -1,28 +1,31 @@
 # The PNNL Proteomics Pipeline: P3
 This project provides the basic analysis and tools for carrying out end-to-end proteomic analysis for data generated at PNNL. This repository will serve as a resource upon which we can build additional tools in a reusable fashion.
 
+## Overview
+
+#### To contribute to this pipeline
+Check out the [CONTRIBUTING.md](./CONTRIBUTING.md) document. We welcome all additional tool and methods. Then you can create a pull request and merge your code in.
+
+#### To use this pipeline
+Fork this repository into your own repository. You can rename it, make it private, and do what you need for your project. Then you can share the repository with others to serve as a code base for project development. The fork button is at the top: [fork](./img/fork.jpg).
+
 ## Pipeline overview
 This pipeline links together a series of data and code repositories to ensure that any data is saved for future use. Furthermore we hope to be able to reproduce the analysis for future projects. A brief overview of each tool is described here.
+[arch](./img/arch.jpg)
 
-### PNNL DMS
-Not sure what to say here.
-### Github
-Github is used to store all analysis code as well as documentation describing the analysis. Using this repository as a model, make sure to keep all code up to date. To create additional code, see the [./CONTRIBUTING.md] file to add to this repository. You must have your own GitHub account.
+### Proteomics and phosphoproteomics processing
+This processing relies on a series of customized `R` scripts that are in the following directories:
+- [global](./global): global proteomics analysis documentation is [here](./global/README.md)
+- [phospo](./phospho): phosphoproteomics analysis documentation is [here](./global/README.md)
+Once this analysis is complete, the data should be stored on Synapse
 
-### Synapse
-All biological data should be stored on [Synapse](http://synapse.org). Synapse operates in private workspaces, called projects. To _create_ a project, you must get a [Synapse id](http://synapse.org/register) and become a [certified user](). Then you can create a new project to store the data. To _add to an existing project_ you must also get a [Synapse id]() and become a [certified user]() but then request access.
+### Synapse processing
+Synapse is used for:
+- data storage: data is backed up for free
+- data processing: UUIDs and permission modifications allow for easy analysis
+- data release: data can be moved to the PDC or shared
 
-### Proteomic Data Commons
-Not sure what this will entail.
+### Functional analysis
+
 
 ## Getting started
-To get started using this pipeline, follow these steps:
-1. Create your own GitHub account:
-To do this...
-2. Fork this repository into your account
-
-3. Register for Synapse
-
-4. Create your own Synapse project OR register for an existing project
-
-5.
