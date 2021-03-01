@@ -25,7 +25,7 @@ Synapse is used for:
 - data processing: UUIDs and permission modifications allow for easy analysis
 - data release: data can be moved to the PDC or shared
 
-You will need to acquire a [synapse username](http://synapse.org/register) to access synapse, and become a [certified user]() to add data, but after that you will be set with future projects. 
+You will need to acquire a [synapse username](http://synapse.org/register) to access synapse, and become a [certified user]() to add data, but after that you will be set with future projects. We created a test site at http://synapse.org/p3. 
 
 ### Functional analysis
 There are typically a few steps we do for functional analysis. They are described in the [functional analysis](./functional) directory for now. 
