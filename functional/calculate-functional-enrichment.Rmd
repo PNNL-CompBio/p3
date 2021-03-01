@@ -1,0 +1,31 @@
+---
+title: "Functional Enrichment Tests"
+author: "Sara Gosline"
+date: "2/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Use of this document
+
+This is an R Markdown document to carry out basic functional analysis on proteomics and phopshporotepomics data. We use basic functional enrichment tools. This type of analysis requires distinct knowledge of the samples at hand so is difficult to generalize.
+
+```{r libraries}
+library(leapr)
+source("../util/synapseLogin.R")
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

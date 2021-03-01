@@ -6,10 +6,18 @@ knitr::opts_chunk$set(cache=F, cache.lazy=FALSE, message=FALSE, warning=FALSE, e
 
 #+ Load packages
 
-library(MSnID)
-library(PlexedPiper)
+if(!require(MSnID))
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("MSnID")
+
+library(devtools)
+if(!require(PlexedPiper))
+  devtools::install_github("vladpetyuk/PlexedPiper", build_vignettes = TRUE)
+
 library(dplyr)
 
+source("../util/synapseUtil.R")
 #+ Data processing parameters
 
 data_package_num <- 3719
@@ -18,17 +26,22 @@ study_name <- "MoTrPAC_PASS1B_Lung_Global"
 
 #+ Read study design tables
 
-fractions <- read.delim("fractions.txt",
+frac_id='syn25005573'
+samp_id='syn25005574'
+ref_id='syn25005575'
+synapse_project_id <- 'syn25005572'
+
+fractions <- read.delim(syn$get(frac_id)$path,
                         stringsAsFactors = FALSE, 
                         colClasses = "character")
 
 message("   + Read samples.txt")
-samples <- read.delim("samples.txt",
+samples <- read.delim(syn$get(samp_id)$path,
                       stringsAsFactors = FALSE, 
                       colClasses = "character")
 
 message("   + Read reference.txt")
-references <- read.delim("references.txt",
+references <- read.delim(syn$get(ref_id)$path,
                          stringsAsFactors = FALSE, 
                          colClasses = "character")
 
@@ -91,5 +104,8 @@ write.table(rii_peptide, paste(study_name, "results_RII-peptide.txt", sep="_"),
 write.table(ratio_results, paste(study_name, "results_ratio.txt", sep="_"),
             sep="\t", row.names = FALSE, quote = FALSE)
 
+message("- Save to synapse")
+synStore(paste(study_name, "results_RII-peptide.txt", sep="_"),synapse_project_id)
+synStore(paste(study_name, "results_ratio.txt", sep="_"),synapse_project_id)
 message("- Done!")
 

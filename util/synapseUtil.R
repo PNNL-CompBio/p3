@@ -6,6 +6,8 @@
 
 #####Synapse python client wrapper files
 
+if(!require(reticulate))
+  install.packages("reticulate")
 
 #' Logs into Synapse using local information
 #' @import reticulate
@@ -13,7 +15,6 @@
 #' @export
 synapseLogin<-function(){
   library(reticulate)
-#  reticulate::use_condaenv(condaenv)
   syn=reticulate::import('synapseclient')
   sync=syn$login()
   return(sync)
@@ -26,7 +27,6 @@ synapseLogin<-function(){
 #' @export
 synapseStore<-function(path,parentId){
   library(reticulate)
- # reticulate::use_condaenv(condaenv)
 
   synapse=reticulate::import('synapseclient')
   sync=synapse$login()
