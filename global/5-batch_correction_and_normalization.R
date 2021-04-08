@@ -10,8 +10,8 @@ library(dplyr)
 library(tibble)
 
 #+ Load data
-load("msnsets/msnset_global_gene.RData")
-load("msnsets/msnset_global_peptide.RData")
+load("data/msnset_global_gene.RData")
+load("data/msnset_global_peptide.RData")
 
 #+ Normalize by sample medians
 normalizeGlobalDataBySampleMedians <- function(msnset_global) {
@@ -80,8 +80,8 @@ msnset_global_gene <- normalizeByGlob(msnset_global_gene, method="medpolish")
 msnset_global_peptide <- normalizeByGlob(msnset_global_peptide, method="medpolish")
 
 #+ Save results
-save(msnset_global_gene, file="msnsets/msnset_global_gene_corrected.RData"))
-save(msnset_global_peptide, file="msnsets/msnset_global_peptide_corrected.RData"))
+save(msnset_global_gene, file="data/msnset_global_gene_corrected.RData"))
+save(msnset_global_peptide, file="data/msnset_global_peptide_corrected.RData"))
 
 write.table(exprs(msnset_global_gene), file="crosstab_global_gene_corrected.txt",
             quote=F, sep="\t", row.names=F)

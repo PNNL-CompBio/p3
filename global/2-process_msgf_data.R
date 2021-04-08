@@ -1,6 +1,5 @@
 
 data_package_num <- NULL
-data_folder <- "./data"
 organism_name <- "Homo sapiens"
 
 #+ Libraries, message=F, warning=F

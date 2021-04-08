@@ -43,15 +43,15 @@ library(stringr)
 # Save to file
 
 write.table(fractions,  
-            file="study_design/fractions.txt"), 
+            file="study_design/fractions.txt", 
             quote=F, sep="\t", row.names=F)
 write.table(samples,  
-            file="study_design/samples.txt"), 
+            file="study_design/samples.txt", 
             quote=F, sep="\t", row.names=F)
 
 if (exists("references")) {
   write.table(references,  
-              file="study_design/references.txt"), 
+              file="study_design/references.txt", 
               quote=F, sep="\t", row.names=F)
 }
 

@@ -25,7 +25,7 @@ write.table(crosstab, file="crosstab_global_gene_original.txt"),
 
 #+ Create accession-level MSnSet
 msnset_global_gene <- create_msnset(as.matrix(crosstab), samples)
-save(msnset_global_gene, file="msnsets/msnset_global_gene.RData"))
+save(msnset_global_gene, file="data/msnset_global_gene.RData"))
 
 #+ Create peptide-level crosstab
 crosstab <- create_crosstab(msnid, masic_data,
@@ -36,5 +36,5 @@ write.table(crosstab, file="crosstab_global_peptide_original.txt",
             quote=F, sep="\t", row.names=F)
 
 msnset_global_peptide <- create_msnset(as.matrix(crosstab), samples)
-save(msnset_global_peptide, file="msnsets/msnset_global_peptide.RData"))
+save(msnset_global_peptide, file="data/msnset_global_peptide.RData"))
 
