@@ -1,9 +1,6 @@
 
-
 library(knitr)
 knitr::opts_chunk$set(cache=F, message=FALSE, warning=FALSE, eval=TRUE)
-
-#+
 
 if(!require(MSnID))
   if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -66,6 +63,3 @@ write.table(references, "references.txt", quote=F, sep="\t", row.names=F)
 synapseStore('fractions.txt',synapse_project_id)
 synapseStore('samples.txt',synapse_project_id)
 synapseStore('references.txt',synapse_project_id)
-
-
-
