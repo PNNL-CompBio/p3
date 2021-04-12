@@ -1,4 +1,9 @@
+---
+title: "Batch correction and normalization for phospho data"
+output: html_notebook
+---
 
+```{r}
 # # To install vp.misc:
 # library(remotes)
 # remotes::install_github("vladpetyuk/vp.misc", build_vignettes=F)
@@ -8,31 +13,43 @@ library(vp.misc)
 library(sva)
 library(dplyr)
 library(tibble)
+```
 
-#+ Load data
-load("data/msnset_global_gene.RData")
-load("data/msnset_global_peptide.RData")
+# Load data
 
-#+ Normalize by sample medians
-normalizeGlobalDataBySampleMedians <- function(msnset_global) {
+```{r}
+load("./../global/data/msnset_global_gene.RData")
+load("data/msnset_phospho_siteid.RData")
+```
+
+
+# Normalize by sample medians
+
+```{r}
+normalizePhosphoDataByGlobalSampleMedians <- function(msnset_phospho, msnset_global) {
   global_coeffs <- apply(exprs(msnset_global), 2, median, na.rm=T)
-  exprs(msnset_global) <- sweep(exprs(msnset_global), 2, global_coeffs, "-")
-  return(msnset_global)
+  exprs(msnset_phospho) <- sweep(exprs(msnset_phospho), 2, global_coeffs, "-")
+  return(msnset_phospho)
 }
 
-msnset_global_gene <- normalizeGlobalDataBySampleMedians(msnset_global_gene)
-msnset_global_peptide <- normalizeGlobalDataBySampleMedians(msnset_global_peptide)
+msnset_phospho_siteid <- normalizeGlobalDataBySampleMedians(msnset_phospho_siteid, msnset_global_gene)
+```
 
-#+ Missing value filter by proportion
+# Missing value filter by proportion
+
+```{r}
 filterByProportionMissingValues <- function(msnset, least_proportion_threshold = 0.5) {
   sufficiently_present_features <- which(apply(!is.na(exprs(msnset)), 1, mean) >= least_proportion_threshold)
   msnset <- msnset[sufficiently_present_features,]
 }
 
-msnset_global_gene <- filterByProportionMissingValues(msnset_global_gene)
-msnset_global_peptide <- filterByProportionMissingValues(msnset_global_peptide)
+msnset_phospho_siteid <- filterByProportionMissingValues(msnset_phospho_siteid)
+```
 
-#+ Missing value filter by plex
+
+# Missing value filter by plex
+
+```{r}
 filterByMissingPerBatch <- function(msnset, batch_name, least_count_threshold=2) {
   batch_to_sample <- pData(msnset) %>%
     select(removed_cov_name) %>%
@@ -53,11 +70,12 @@ filterByMissingPerBatch <- function(msnset, batch_name, least_count_threshold=2)
   msnset <- msnset[sufficiently_present_features, ]
 }
 
-msnset_global_gene <- filterByMissingPerBatch(msnset_global_gene, "PlexID")
-msnset_global_peptide <- filterByMissingPerBatch(msnset_global_peptide, "PlexID")
+msnset_phospho_siteid <- filterByMissingPerBatch(msnset_phospho_siteid, "PlexID")
+```
 
+# Batch correction using ComBat
 
-#+ Batch correction using ComBat
+```{r}
 correctBatchEffectComBat <- function (msnset, batch_name, BPPARAM = bpparam(), ...) 
 {
   modcombat <- model.matrix(~1, data = select(pData(msnset), batch_name))
@@ -71,20 +89,24 @@ correctBatchEffectComBat <- function (msnset, batch_name, BPPARAM = bpparam(), .
 }
 
 
-msnset_global_gene <- correctBatchEffectComBat(msnset_global_gene, "PlexID")
-msnset_global_peptide <- correctBatchEffectComBat(msnset_global_peptide, "PlexID")
+msnset_phospho_siteid <- correctBatchEffectComBat(msnset_phospho_siteid, "PlexID")
+```
 
-#+ Medpolish
+# Medpolish
+
+```{r}
 library(vp.misc)
-msnset_global_gene <- normalizeByGlob(msnset_global_gene, method="medpolish")
-msnset_global_peptide <- normalizeByGlob(msnset_global_peptide, method="medpolish")
+msnset_phospho_siteid <- normalizeByGlob(msnset_phospho_siteid, method="medpolish")
+```
 
-#+ Save results
-save(msnset_global_gene, file="data/msnset_global_gene_corrected.RData"))
-save(msnset_global_peptide, file="data/msnset_global_peptide_corrected.RData"))
 
-write.table(exprs(msnset_global_gene), file="crosstab_global_gene_corrected.txt",
+# Save results
+
+```{r}
+save(msnset_phospho_siteid, file="data/msnset_phospho_siteid_corrected.RData"))
+
+write.table(exprs(msnset_phospho_siteid), file="crosstab_phospho_siteid_corrected.txt",
             quote=F, sep="\t", row.names=F)
-write.table(exprs(msnset_global_peptide), file="crosstab_global_peptide_corrected.txt",
-            quote=F, sep="\t", row.names=F)
+```
+
 
