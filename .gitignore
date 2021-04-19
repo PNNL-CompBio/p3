@@ -1,3 +1,8 @@
+# Pipeline data
+global/data
+phospho/data
+
+
 # History files
 .Rhistory
 .Rapp.history
