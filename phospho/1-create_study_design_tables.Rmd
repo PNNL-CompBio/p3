@@ -1,0 +1,29 @@
+---
+title: "Creation of study design tables"
+output: html_notebook
+---
+
+```{r}
+library(PlexedPiper)
+data_package_num <- 3606
+```
+
+```{r}
+study_design <- get_study_design_by_dataset_package(data_package_num)
+
+fractions <- study_design$fractions
+samples <- study_design$samples
+references <- study_design$references
+```
+
+```{r}
+print(fractions)
+```
+
+```{r}
+print(samples)
+```
+
+```{r}
+print(references)
+```
