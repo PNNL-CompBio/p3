@@ -1,7 +1,7 @@
 ---
 title: "Functional Enrichment Tests"
 author: "Sara Gosline"
-date: "2/17/2021"
+date: "4/19/2021"
 output: html_document
 ---
 
@@ -15,17 +15,25 @@ This is an R Markdown document to carry out basic functional analysis on proteom
 
 ```{r libraries}
 library(leapr)
-source("../util/synapseLogin.R")
+source("../util/synapseUtil.R")
 
 
 ```
 
-## Including Plots
+## Get test dataset
 
-You can also embed plots, for example:
+For any analysis we need to first collect the data of interest.
+
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Compute differentially expressed proteins
+
+
+
+## Compute differentially expressed phosphosites
+
