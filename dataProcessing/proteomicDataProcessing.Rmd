@@ -58,7 +58,7 @@ Now we have the proteomics and metadata joined in a single table.
 
  pmat <- read.csv(syn$get(phos.syn)$path,sep='\t',header=T)
    
-  phos.mat<-pmat%>%tidyr::pivot_longer(cols=c(6:ncol(mat)),names_to='Sample',
+  phos.mat<-pmat%>%tidyr::pivot_longer(cols=c(6:ncol(pmat)),names_to='Sample',
                         values_to='LogRatio')%>%
      left_join(meta.tab)%>%
     subset(!is.na(LogRatio))
