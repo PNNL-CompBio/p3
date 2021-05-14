@@ -1,6 +1,5 @@
 # Pipeline data
-global/data
-phospho/data
+proteomics/data
 
 
 # History files
