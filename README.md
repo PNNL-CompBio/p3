@@ -1,3 +1,9 @@
+```
+This repository has been archived and is no longer maintained.
+The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.
+It should not be used in production systems.
+```
+
 # The PNNL Proteomics Pipeline: P3
 This project provides the basic analysis and tools for carrying out end-to-end proteomic analysis for data generated at PNNL. This repository will serve as a resource upon which we can build additional tools in a reusable fashion. Ideally we will include scripts and libraries that can be used as building blocks for future analysis.
 
